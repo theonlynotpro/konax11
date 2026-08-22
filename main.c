@@ -3,12 +3,15 @@
 #include <X11/Xlib.h>
 #include <unistd.h>
 #include <X11/Xutil.h>
+#include <png.h>
+
+#include "image.h"
 
 
 int main(int argc, char *argv[]){
 
-
-  Display* display = XOpenDisplay(NULL);
+  printf("%s\n", PNG_LIBPNG_VER_STRING);
+  Display *display = XOpenDisplay(NULL);
 
   int screen = DefaultScreen(display);
   Window window = XCreateSimpleWindow(display, DefaultRootWindow(display),
@@ -19,11 +22,12 @@ int main(int argc, char *argv[]){
   XMapWindow(display, window);
   XFlush(display);
 
+  Image *image t= image_load_png("image.png");
+
   sleep(2);
 
 
 
-  printf("%p\n", (void*)display);
 
   XUnmapWindow(display, window);
   XDestroyWindow(display, window);
