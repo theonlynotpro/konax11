@@ -1,3 +1,3 @@
 CC := gcc
 build:
-	@$(CC) main.c image.c -o konax11 -lX11 -lpng 
+	@$(CC) -O2 main.c -o konax11 -lX11 -lImlib2
