@@ -1,0 +1,15 @@
+[
+ {
+  "directory": "/home/notpro/konax11",
+  "arguments": [
+   "gcc",
+   "-O2",
+   "main.c",
+   "-o",
+   "konax11",
+   "-lX11",
+   "-lImlib2"
+  ],
+  "file": "main.c"
+ }
+]

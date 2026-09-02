@@ -8,10 +8,20 @@
 int width, height;
 const int FRAME_DELAY = 1000000 / 30; 
 
+typedef struct {
+  unsigned long flags;
+  unsigned long functions;
+  unsigned long decorations;
+  long inputMode;
+  unsigned long status;
+} Hints;
+
+
+#define MWM_HINTS_DECORATIONS (1L << 1)
 
 
 int main(int argc, char *argv[]){
-
+  const char **img_paths;
 
   Display *display = XOpenDisplay(NULL);
 
@@ -22,7 +32,7 @@ int main(int argc, char *argv[]){
       XCloseDisplay(display);
       return 1;
    }
-
+  
   Window root = RootWindow(display, screen);
 
   Imlib_Image img = imlib_load_image("img/frame001.png");
@@ -52,6 +62,13 @@ int main(int argc, char *argv[]){
   GC gc = XCreateGC(display, window, 0, NULL);
 
 
+  Hints hints;
+  Atom property;
+  hints.flags = 2;
+  hints.decorations = 0;
+  property = XInternAtom(display, "_MOTIF_WM_HINTS", True);
+  XChangeProperty(display,window,property,property,32,PropModeReplace,(unsigned char *)&hints,5);
+  XMapWindow(display, window);
   imlib_context_set_display(display);
   imlib_context_set_visual(vinfo.visual);
   imlib_context_set_colormap(attrs.colormap);
