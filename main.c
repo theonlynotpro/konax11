@@ -129,7 +129,7 @@ int main(int argc, char *argv[]){
 
   XSync(display, False);
 
-  for (int i = cur_frame; i <= 13; i++) {
+  for (int i = 1; i <= 13; i++) {
       if (loaded_images[i] != NULL) {
           imlib_context_set_image(loaded_images[i]);
           imlib_free_image();                         
