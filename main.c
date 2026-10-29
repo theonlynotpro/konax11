@@ -21,8 +21,6 @@ typedef struct {
 
 
 int main(int argc, char *argv[]){
-  const char **img_paths;
-
   Display *display = XOpenDisplay(NULL);
 
   int screen = DefaultScreen(display);
@@ -35,6 +33,7 @@ int main(int argc, char *argv[]){
   
   Window root = RootWindow(display, screen);
 
+  void* loaded_images[14];
   Imlib_Image img = imlib_load_image("img/frame001.png");
   if (img) {
     imlib_context_set_image(img);
@@ -86,6 +85,14 @@ int main(int argc, char *argv[]){
   int running = 1;
   int cur_frame = 1;
   char cur_filename[32];
+
+  for (int i = cur_frame; i <=13; i++){
+    sprintf(cur_filename, "img/frame%03d.png", i);
+    Imlib_Image img = imlib_load_image(cur_filename);
+    loaded_images[i] = img;
+  }
+
+
   while (running) {
     while (XPending(display)){
         XNextEvent(display, &ev);
@@ -95,9 +102,7 @@ int main(int argc, char *argv[]){
 
     XFlush(display);
 
-    sprintf(cur_filename, "img/frame%03d.png", cur_frame);
-
-    img = imlib_load_image(cur_filename);
+    img = loaded_images[cur_frame];
 
     if (img) {
         XSetForeground(display, gc, 0x00000000);
@@ -106,8 +111,6 @@ int main(int argc, char *argv[]){
         imlib_context_set_image(img);
         imlib_render_image_on_drawable(0, 0);
         XCopyArea(display, buffer, window, gc, 0, 0, width, height, 0, 0);
-        imlib_free_image();
-        img = NULL;
     }
     XFlush(display);
     cur_frame++;
@@ -126,7 +129,13 @@ int main(int argc, char *argv[]){
 
   XSync(display, False);
 
-
+  for (int i = cur_frame; i <= 13; i++) {
+      if (loaded_images[i] != NULL) {
+          imlib_context_set_image(loaded_images[i]);
+          imlib_free_image();                         
+          loaded_images[i] = NULL;                    
+      }
+  }
   XFreeGC(display, gc);
   XFreePixmap(display, buffer);
 
